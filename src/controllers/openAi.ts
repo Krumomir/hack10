@@ -1,5 +1,6 @@
-import express, { response } from 'express';
-import { openai, anthropic } from '../app';
+import express from 'express';
+import { translator, anthropic } from '../app';
+import * as deepl from 'deepl-node';
 
 export const summarize = async (req: express.Request, res: express.Response) => {
   const { text } = req.body;
@@ -94,7 +95,6 @@ export const extend = async (req: express.Request, res: express.Response) => {
         ]
       });
 
-    // Make the API request here...
     try {
         let message = msg.content[0].text;
        
@@ -104,15 +104,27 @@ export const extend = async (req: express.Request, res: express.Response) => {
     }
 };
 
+// curl -X POST 'https://api-free.deepl.com/v2/translate' \
+// --header 'Authorization: DeepL-Auth-Key [yourAuthKey]' \
+// --header 'Content-Type: application/json' \
+// --data '{
+//   "text": [
+//     "Hello, world!"
+//   ],
+//   "target_lang": "DE"
+// }'
+
+
 // export const translate = async (req: express.Request, res: express.Response) => {
 //   const { text, target } = req.body;
 
-//   const msg = await anthropic
-
-//   try {
-//       res.type('application/json');
-//       return res.send({ message: msg.translations[0].translation });
-//   } catch (error) {
-//       throw new Error(error as string);
-//   }
+//   const targetLang: deepl.TargetLanguageCode = 'fr';
+//   const results = await translator.translateText(
+//       text,
+//       null,
+//       target,
+//   );
+//   results.map((result: deepl.TextResult) => {
+//       console.log(result.text); // Bonjour, le monde !
+//   });
 // }
