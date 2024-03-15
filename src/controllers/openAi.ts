@@ -104,27 +104,18 @@ export const extend = async (req: express.Request, res: express.Response) => {
     }
 };
 
-// curl -X POST 'https://api-free.deepl.com/v2/translate' \
-// --header 'Authorization: DeepL-Auth-Key [yourAuthKey]' \
-// --header 'Content-Type: application/json' \
-// --data '{
-//   "text": [
-//     "Hello, world!"
-//   ],
-//   "target_lang": "DE"
-// }'
+export const translate = async (req: express.Request, res: express.Response) => {
+  const { text, target } = req.body;
 
-
-// export const translate = async (req: express.Request, res: express.Response) => {
-//   const { text, target } = req.body;
-
-//   const targetLang: deepl.TargetLanguageCode = 'fr';
-//   const results = await translator.translateText(
-//       text,
-//       null,
-//       target,
-//   );
-//   results.map((result: deepl.TextResult) => {
-//       console.log(result.text); // Bonjour, le monde !
-//   });
-// }
+  const results = await translator.translateText(
+      text,
+      null,
+      target,
+  ) as deepl.TextResult;
+  
+  try {
+      return res.send({ message: results.text });
+  } catch (error) {
+      throw new Error(error as string);
+  }
+}
